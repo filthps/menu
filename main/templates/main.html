@@ -1,11 +1,13 @@
-{% load menu %}
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Test Page</title>
-</head>
-<body>
-{% draw_menu 'first menu'  %}
-</body>
+    {% load menu %}
+    {% load static %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Page</title>
+        <link href="{% static 'main.css' %}" type="text/css" rel="stylesheet">
+    </head>
+    <body>
+        {% draw_menu 'first menu'  %}
+    </body>
 </html>

@@ -1,3 +1,56 @@
-{% for level in data %}
-
-{% endfor %}
+{% if menu_name %}
+    <div id="menu">
+        <h2>{{ menu_name }}</h2>
+{% endif %}
+<ul>
+    {% for item in data %}
+        {% if current_level %}  <!-- Выход ИЗ РЕКУРСИИ -->
+            {% if item.level_index == current_level %}
+                {% if request.path == item.href %}
+                    <li>
+                        {% include "menu_item.html" with item=item next_level=None %}
+                    </li>
+                {% else %}
+                    {% if item.hidden %}
+                        <li class="hidden">
+                            {% include "menu_item.html" with item=item next_level=None %}
+                        </li>
+                    {% else %}
+                        <li>
+                            {% include "menu_item.html" with item=item next_level=None %}
+                        </li>
+                    {% endif %}
+                {% endif %}
+            {% endif %}
+        {% else %}
+            {% if item.parent_item %}
+                <ul>
+                    {% if request.path == item.href %}
+                        <li>
+                            {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                        </li>
+                    {% else %}
+                        {% if item.hidden %}
+                            <li class="hidden">
+                                {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                            </li>
+                        {% else %}
+                            <li>
+                                {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                            </li>
+                        {% endif %}
+                    {% endif %}
+            {% else %}
+                <li>
+                    {% include "menu_item.html" with item=item %}
+                </li>
+            {% endif %}
+            {% if item.parent_item %}
+                </ul>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+</ul>
+{% if menu_name %}
+    </div>
+{% endif %}
