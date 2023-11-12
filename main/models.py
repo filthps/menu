@@ -11,6 +11,6 @@ class MenuItem(models.Model):
     level_index = models.SmallIntegerField(default=0, db_index=True)
     column_index = models.SmallIntegerField(default=0, db_index=True)
     menu = models.ForeignKey(Menu, on_delete=models.CASCADE, to_field="name")
-    parent_item = models.ForeignKey("self", on_delete=models.CASCADE, null=True, default=None, blank=True)
+    child_item = models.ForeignKey("self", on_delete=models.CASCADE, null=True, default=None, blank=True)
     hidden = models.BooleanField(blank=False, default=False)
     href = models.URLField()
