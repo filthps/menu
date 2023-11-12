@@ -2,54 +2,48 @@
     <div id="menu">
         <h2>{{ menu_name }}</h2>
 {% endif %}
-<ul>
-    {% for item in data %}
-        {% if current_level %}  <!-- Выход ИЗ РЕКУРСИИ -->
-            {% if item.level_index == current_level %}
-                {% if request.path == item.href %}
-                    <li>
-                        {% include "menu_item.html" with item=item next_level=None %}
+    <ul>
+        {% if child_item %}  {# Выход из рекурсии в этом блоке #}
+            {% if request.path == item.href %}
+                <li>
+                    {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию #}
+                </li>
+            {% else %}
+                {% if item.hidden %}
+                    <li class="hidden">
+                        {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию  #}
                     </li>
                 {% else %}
-                    {% if item.hidden %}
-                        <li class="hidden">
-                            {% include "menu_item.html" with item=item next_level=None %}
-                        </li>
-                    {% else %}
-                        <li>
-                            {% include "menu_item.html" with item=item next_level=None %}
-                        </li>
-                    {% endif %}
+                    <li>
+                        {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию  #}
+                    </li>
                 {% endif %}
             {% endif %}
         {% else %}
-            {% if item.parent_item %}
-                <ul>
+            {% for item in data %}
+                {% if item.child_item %}
+                    <ul>
+                {% endif %}
                     {% if request.path == item.href %}
                         <li>
-                            {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                            {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
                         </li>
                     {% else %}
                         {% if item.hidden %}
                             <li class="hidden">
-                                {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                                {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
                             </li>
                         {% else %}
                             <li>
-                                {% include "menu_item.html" with item=item.parent_item next_level=item.parent_item.level_index %}  <!-- Вход в рекурсию  -->
+                                {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
                             </li>
                         {% endif %}
                     {% endif %}
-            {% else %}
-                <li>
-                    {% include "menu_item.html" with item=item %}
-                </li>
-            {% endif %}
-            {% if item.parent_item %}
-                </ul>
-            {% endif %}
+                {% if item.child_item %}
+                    </ul>
+                {% endif %}
+            {% endfor %}
         {% endif %}
-    {% endfor %}
 </ul>
 {% if menu_name %}
     </div>

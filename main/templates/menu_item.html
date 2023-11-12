@@ -1,0 +1,4 @@
+<span><a href="{{ item.href }}" target="_blank">{{item.inner_text}}</a></span>
+{% if child_item %}
+    {% include "menu.html" with child_item=child_item menu_name=None  %}
+{% endif %}
