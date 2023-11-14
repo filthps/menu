@@ -1,3 +1,4 @@
+{% load menu %}
 {% if menu_name %}
     <div id="menu">
         <h2>{{ menu_name }}</h2>
@@ -6,41 +7,38 @@
         {% if child_item %}  {# Выход из рекурсии в этом блоке #}
             {% if request.path == item.href %}
                 <li>
-                    {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию #}
+                    {% recursion_in child_item %}
                 </li>
             {% else %}
                 {% if item.hidden %}
                     <li class="hidden">
-                        {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию  #}
+                        {% recursion_in child_item %}
                     </li>
                 {% else %}
                     <li>
-                        {% include "menu_item.html" with item=child_item child_item=child_item.child_item %}  {# Вход в рекурсию  #}
+                        {% recursion_in child_item %}
                     </li>
                 {% endif %}
             {% endif %}
         {% else %}
+            {% if not menu_name %}  {# Это означает что рекурсивный поиск потомков онончен. Терминальный случай #}
+                </ul>
+            {% endif %}
             {% for item in data %}
-                {% if item.child_item %}
-                    <ul>
-                {% endif %}
-                    {% if request.path == item.href %}
-                        <li>
-                            {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
+                {% if request.path == item.href %}
+                    <li>
+                        {% recursion_in item %}
+                    </li>
+                {% else %}
+                    {% if item.hidden %}
+                        <li class="hidden">
+                            {% recursion_in item %}
                         </li>
                     {% else %}
-                        {% if item.hidden %}
-                            <li class="hidden">
-                                {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
-                            </li>
-                        {% else %}
-                            <li>
-                                {% include "menu_item.html" with item=item child_item=item.child_item %}  {# Вход в рекурсию  #}
-                            </li>
-                        {% endif %}
+                        <li>
+                            {% recursion_in item %}
+                        </li>
                     {% endif %}
-                {% if item.child_item %}
-                    </ul>
                 {% endif %}
             {% endfor %}
         {% endif %}
