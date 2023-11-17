@@ -1,9 +1,8 @@
 {% if item %}
     <span><a href="{{ item.href }}" target="_blank">{{item.inner_text}}</a></span>
-    {% if item.child_item %}
-        <ul>
-    {% endif %}
 {% endif %}
 {% if child_item %}
-    {% include "menu.html" with child_item=child_item menu_name=None  %}
+    <ul>
+        {% include "menu.html" with child_item=child_item menu_name=None item=None  %}
+    </ul>
 {% endif %}

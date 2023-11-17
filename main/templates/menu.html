@@ -2,47 +2,44 @@
 {% if menu_name %}
     <div id="menu">
         <h2>{{ menu_name }}</h2>
+        <ul>
 {% endif %}
-    <ul>
-        {% if child_item %}  {# Выход из рекурсии в этом блоке #}
-            {% if request.path == item.href %}
+    {% if child_item %}  {# Выход из рекурсии в этом блоке #}
+        {% if request.path == item.href %}
+            <li>
+                {% recursion_in child_item %}
+            </li>
+        {% else %}
+            {% if item.hidden %}
+                <li class="hidden">
+                    {% recursion_in child_item %}
+                </li>
+            {% else %}
                 <li>
                     {% recursion_in child_item %}
+                </li>
+            {% endif %}
+        {% endif %}
+    {% else %}
+        {% for item in data %}
+            {% if request.path == item.href %}
+                <li>
+                    {% recursion_in item %}
                 </li>
             {% else %}
                 {% if item.hidden %}
                     <li class="hidden">
-                        {% recursion_in child_item %}
-                    </li>
-                {% else %}
-                    <li>
-                        {% recursion_in child_item %}
-                    </li>
-                {% endif %}
-            {% endif %}
-        {% else %}
-            {% if not menu_name %}  {# Это означает что рекурсивный поиск потомков онончен. Терминальный случай #}
-                </ul>
-            {% endif %}
-            {% for item in data %}
-                {% if request.path == item.href %}
-                    <li>
                         {% recursion_in item %}
                     </li>
                 {% else %}
-                    {% if item.hidden %}
-                        <li class="hidden">
-                            {% recursion_in item %}
-                        </li>
-                    {% else %}
-                        <li>
-                            {% recursion_in item %}
-                        </li>
-                    {% endif %}
+                    <li>
+                        {% recursion_in item %}
+                    </li>
                 {% endif %}
-            {% endfor %}
-        {% endif %}
-</ul>
-{% if menu_name %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+   {% if menu_name %}
+    </ul>
     </div>
 {% endif %}
