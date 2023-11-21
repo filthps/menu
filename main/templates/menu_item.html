@@ -1,8 +1,20 @@
 {% if item %}
-    <span><a href="{{ item.href }}" target="_blank">{{item.inner_text}}</a></span>
+{% if item.hidden %}
+    <li class="hidden">
+{% else %}
+    <li>
+{% endif %}
+        <span>
+            {% if not request.path == item.href %}
+                <a href="{{ item.href }}" target="_blank">{{item.inner_text}}</a>
+            {% else %}
+                {{item.inner_text}}
+            {% endif %}
+        </span>
 {% endif %}
 {% if child_item %}
     <ul>
         {% include "menu.html" with child_item=child_item menu_name=None item=None  %}
     </ul>
 {% endif %}
+</li>

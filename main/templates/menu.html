@@ -4,39 +4,11 @@
         <h2>{{ menu_name }}</h2>
         <ul>
 {% endif %}
-    {% if child_item %}  {# Выход из рекурсии в этом блоке #}
-        {% if request.path == item.href %}
-            <li>
-                {% recursion_in child_item %}
-            </li>
-        {% else %}
-            {% if item.hidden %}
-                <li class="hidden">
-                    {% recursion_in child_item %}
-                </li>
-            {% else %}
-                <li>
-                    {% recursion_in child_item %}
-                </li>
-            {% endif %}
-        {% endif %}
+    {% if child_item %}
+        {% recursion_in child_item %}
     {% else %}
         {% for item in data %}
-            {% if request.path == item.href %}
-                <li>
-                    {% recursion_in item %}
-                </li>
-            {% else %}
-                {% if item.hidden %}
-                    <li class="hidden">
-                        {% recursion_in item %}
-                    </li>
-                {% else %}
-                    <li>
-                        {% recursion_in item %}
-                    </li>
-                {% endif %}
-            {% endif %}
+            {% recursion_in item True %}
         {% endfor %}
     {% endif %}
    {% if menu_name %}
