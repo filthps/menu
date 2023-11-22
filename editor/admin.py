@@ -1,7 +1,7 @@
 import itertools
-from django.contrib import admin
-from django.db.models import F
 from django import forms
+from django.contrib import admin
+from django.db.models import F, Q
 from main.models import MenuItem, Menu
 
 
@@ -15,15 +15,13 @@ class CustomMenuItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         parent = MenuItem.objects.filter(child_item=self.instance)
         if parent.count():
-            self.fields["parent_item"].choices = itertools.chain([("", "----",)],
-                                                                 map(lambda x: (x.pk, x,),
-                                                                     MenuItem.objects.filter(menu_id=self.instance.menu_id)))
             self.initial["parent_item"] = (parent[0].pk, parent[0],)
         else:
-            self.fields["parent_item"].choices = itertools.chain([("", "----",)],
-                                                                 map(lambda x: (x.pk, x,),
-                                                                     MenuItem.objects.filter(menu__isnull=True)))
             self.initial["parent_item"] = ("", "----",)
+        self.fields["parent_item"].choices = itertools.chain([("", "----",)],
+                                                             map(
+                                                                 lambda x: (x.pk, x,), MenuItem.objects.filter(
+                                                                     Q(menu_id=self.instance.menu_id) | Q(menu__isnull=True))))
 
     def clean(self):
         cleaned_data = super().clean()
