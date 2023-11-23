@@ -1,7 +1,7 @@
 import itertools
-from django.contrib import admin
-from django.db.models import F
 from django import forms
+from django.contrib import admin
+from django.db.models import F, Q
 from main.models import MenuItem, Menu
 
 
@@ -15,15 +15,13 @@ class CustomMenuItemForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         parent = MenuItem.objects.filter(child_item=self.instance)
         if parent.count():
-            self.fields["parent_item"].choices = itertools.chain([("", "----",)],
-                                                                 map(lambda x: (x.pk, x,),
-                                                                     MenuItem.objects.filter(menu_id=self.instance.menu_id)))
             self.initial["parent_item"] = (parent[0].pk, parent[0],)
         else:
-            self.fields["parent_item"].choices = itertools.chain([("", "----",)],
-                                                                 map(lambda x: (x.pk, x,),
-                                                                     MenuItem.objects.filter(menu__isnull=True)))
             self.initial["parent_item"] = ("", "----",)
+        self.fields["parent_item"].choices = itertools.chain([("", "----",)],
+                                                             map(
+                                                                 lambda x: (x.pk, x,), MenuItem.objects.filter(
+                                                                     Q(menu_id=self.instance.menu_id) | Q(menu__isnull=True))))
 
     def clean(self):
         cleaned_data = super().clean()
@@ -38,11 +36,11 @@ class CustomMenuItemForm(forms.ModelForm):
     def clean_column_index(self):
         index_by_current_level = self.cleaned_data["column_index"]
         if not index_by_current_level:  # default
-            last_item = MenuItem.objects.filter(menu_id=self.instance.menu_id).filter(
-                level_index=self.instance.level_index).order_by("column_index")
+            last_item = MenuItem.objects.filter(menu_id=self.instance.menu_id).order_by("column_index")
             return last_item.last().column_index if last_item.count() else 0
-        items_with_highest_co_index = MenuItem.objects.filter(level_index=self.instance.level_index,
-                                                              column_index__gte=self.instance.column_index)\
+        if not MenuItem.objects.filter(column_index=index_by_current_level - 1).count():
+            raise forms.ValidationError("Указанный индекс слишком велик")
+        items_with_highest_co_index = MenuItem.objects.filter(column_index__gte=self.instance.column_index)\
             .order_by("column_index")
         val = items_with_highest_co_index.last().column_index
         if items_with_highest_co_index.count():  # Сместить в право на 1 элементы старше редактируемого

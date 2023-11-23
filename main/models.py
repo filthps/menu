@@ -2,7 +2,7 @@ from django.db import models
 
 
 class Menu(models.Model):
-    name = models.CharField(max_length=10, blank=False, unique=True, db_index=True)
+    name = models.CharField(max_length=10, blank=False, unique=True)
 
     def __str__(self):
         return self.name
