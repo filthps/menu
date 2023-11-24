@@ -22,6 +22,9 @@ li {
     display: inline;
     padding: 0 15px;
 }
-li.hidden, li.hidden ul {
-    display: none;
+li.hidden {
+    visibility: hidden;
+}
+li.current, li.current > ul > li.hidden:first-child {
+    visibility: visible;
 }
