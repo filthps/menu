@@ -5,14 +5,15 @@ from main.models import MenuItem
 register = template.Library()
 
 
-@register.inclusion_tag("menu.html")
-def draw_menu(name):
-    query_set = MenuItem.objects.select_related("child_item", "menu").filter(menu=name).order_by("column_index")
+@register.inclusion_tag("menu.html", takes_context=True)
+def draw_menu(context, name):
+    query_set = MenuItem.objects.select_related("child_item").select_related("menu").filter(menu=name).order_by("column_index")
     try:
         menu_name = next(iter(query_set)).menu.name
     except StopIteration:
         menu_name = None
     return {
+        "request": context["request"],
         "exists_items": set(),
         "data": query_set,
         "menu_name": menu_name
