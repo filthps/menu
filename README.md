@@ -2,14 +2,14 @@
 Тестовое задание
 
 
-!["ТЗ"][readme images/0.png](https://github.com/filthps/menu/blob/master/readme%20images/0.png)
+![тз](https://github.com/filthps/menu/blob/master/readme%20images/0.png)
 
-!["ТЗ"][readme images/5.png](https://github.com/filthps/menu/blob/master/readme%20images/5.png)
+![template](https://github.com/filthps/menu/blob/master/readme%20images/5.png)
 
-!["ТЗ"][readme images/3.png](https://github.com/filthps/menu/blob/master/readme%20images/3.png)
+![conf](https://github.com/filthps/menu/blob/master/readme%20images/3.png)
 
-!["ТЗ"][readme images/4.png](https://github.com/filthps/menu/blob/master/readme%20images/4.png)
+![conf](https://github.com/filthps/menu/blob/master/readme%20images/4.png)
 
-!["ТЗ"][readme images/1.png](https://github.com/filthps/menu/blob/master/readme%20images/1.png)
+![result](https://github.com/filthps/menu/blob/master/readme%20images/1.png)
 
-!["ТЗ"][readme images/2.png](https://github.com/filthps/menu/blob/master/readme%20images/2.png)
+![result](https://github.com/filthps/menu/blob/master/readme%20images/2.png)
