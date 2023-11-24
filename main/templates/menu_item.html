@@ -1,14 +1,18 @@
 {% if item %}
-{% if item.hidden %}
+{% if item.hidden and not request.build_absolute_uri == item.href %}
     <li class="hidden">
 {% else %}
-    <li>
+    {% if not request.build_absolute_uri == item.href %}
+        <li>
+    {% else %}
+        <li class="current">
+    {% endif %}
 {% endif %}
         <span>
-            {% if not request.path == item.href %}
-                <a href="{{ item.href }}" target="_blank">{{item.inner_text}}</a>
+            {% if not request.build_absolute_uri == item.href %}
+                <a href="{{ item.href }}" target="_blank">{{item.label}}</a>
             {% else %}
-                {{item.inner_text}}
+                {{item.label}}
             {% endif %}
         </span>
 {% endif %}
