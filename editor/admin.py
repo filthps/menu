@@ -62,6 +62,7 @@ class CustomMenuItemForm(forms.ModelForm):
 
 class ItemsModelAdmin(admin.ModelAdmin):
     form = CustomMenuItemForm
+    list_display = ("label", "href", "child_item", "hidden",)
 
 
 admin.site.register(Menu)
